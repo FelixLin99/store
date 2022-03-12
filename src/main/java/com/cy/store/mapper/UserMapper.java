@@ -11,6 +11,8 @@ package com.cy.store.mapper;
 import com.cy.store.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.Date;
+
 /**用户模块的持久层接口*/
 // 先规划需要的SQL语句，如用户注册是 INSERT INTO t_user(...) VALUES (...)
 
@@ -28,5 +30,29 @@ public interface UserMapper {
      * @return 找到则返回该用户，否则返回Null
      */
     User findByUsername(String username);
+
+    /**
+     * @param uid
+     * @param modifiedUser
+     * @param modifiedTime
+     * @param password
+     * @return 影响的行数
+     */
+    Integer updatePasswordByUid(Integer uid, String modifiedUser, Date modifiedTime, String password);
+
+    /**
+     *
+     * @param uid
+     * @return user info
+     */
+    User findByUid(Integer uid);
+
+    /**
+     * 更新手机，邮箱，性别
+     * @param user
+     * @return 受影响的行数
+     */
+    Integer updateInfoByUid(User user);
+
 
 }

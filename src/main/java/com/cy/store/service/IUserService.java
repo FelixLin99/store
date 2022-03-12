@@ -14,4 +14,11 @@ public interface IUserService {
 
     User login(String username, String password);
 
+    void update(Integer uid, String username, String newPassword, String oldPassword);
+
+    User findByUid(Integer uid);
+
+    void updateInfo(Integer uid, String username, User user);
+
+
 }

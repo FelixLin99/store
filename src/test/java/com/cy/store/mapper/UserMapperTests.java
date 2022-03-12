@@ -1,12 +1,16 @@
 package com.cy.store.mapper;
 
 import com.cy.store.entity.User;
+import org.junit.Assert;
 import org.junit.Test;
+import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Date;
 
 /**
  * @author Shuhui Lin
@@ -44,5 +48,33 @@ public class UserMapperTests {
         Integer rows = userMapper.insert(user);
         System.out.println(rows);
     }
+
+    @Test
+    public void updatePasswordByUid(){
+        Integer rows = userMapper.updatePasswordByUid(6, "Felix", new Date(), "123123");
+        Assert.assertEquals((long) rows, 1);
+    }
+
+    @Test
+    public void findByUid(){
+        Integer uid = 3;
+        User uu = userMapper.findByUid(uid);
+        Assert.assertEquals("admin01", uu.getUsername());
+    }
+
+    @Test
+    public void updateInfoByUid(){
+        User user = new User();
+        user.setUid(8);
+        user.setPhone("10086");
+        user.setEmail("shit@gmail.com");
+        user.setGender(1);
+        user.setModifiedUser("Felix");
+        user.setModifiedTime(new Date());
+        Integer rows = userMapper.updateInfoByUid(user);
+
+        Assert.assertEquals((long)rows, 1);
+    }
+
 
 }

@@ -3,6 +3,7 @@ package com.cy.store.service;
 import com.cy.store.entity.User;
 import com.cy.store.mapper.UserMapper;
 import com.cy.store.service.ex.ServiceException;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class UserServiceTests {
     public void reg (){
         try {
             User user = new User();
-            user.setUsername("admin01");
+            user.setUsername("admin02");
             user.setPassword("123");
             userService.reg(user);
             System.out.println("ok");
@@ -53,8 +54,28 @@ public class UserServiceTests {
 
     @Test
     public void login(){
-        User admin04 = userService.login("admin04", "123");
+        User admin04 = userService.login("admin02", "123");
         System.out.println(admin04);
+    }
+
+    @Test
+    public void update(){
+        userService.update(8, "admin02", "321", "123");
+    }
+
+    @Test
+    public void findByUid(){
+        User uu = userService.findByUid(8);
+        Assert.assertEquals(uu.getUsername(), "admin02");
+    }
+
+    @Test
+    public void updateInfo(){
+        User user = new User();
+        user.setPhone("66666");
+        user.setEmail("13123@1233");
+        user.setGender(0);
+        userService.updateInfo(8,"admin02",user);
     }
 
 }

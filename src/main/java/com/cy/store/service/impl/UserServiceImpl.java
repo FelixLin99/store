@@ -3,10 +3,7 @@ package com.cy.store.service.impl;
 import com.cy.store.entity.User;
 import com.cy.store.mapper.UserMapper;
 import com.cy.store.service.IUserService;
-import com.cy.store.service.ex.InsertException;
-import com.cy.store.service.ex.PasswordNotMatchException;
-import com.cy.store.service.ex.UserNotFoundException;
-import com.cy.store.service.ex.UsernameDuplicatedException;
+import com.cy.store.service.ex.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -78,6 +75,53 @@ public class UserServiceImpl implements IUserService {
         user.setUsername(result.getUsername());
         user.setAvatar(result.getAvatar());
         return user;
+    }
+
+    @Override
+    public void update(Integer uid, String username, String newPassword, String oldPassword) {
+        // 判断用户是否存在
+        User uu = userMapper.findByUid(uid);
+        if (uu==null || uu.getIsDelete()==1){
+            throw new UserNotFoundException("用户不存在");
+        }
+        // 判断密码是否正确
+        String md5Password = getMD5Password(oldPassword, uu.getSalt());
+        if (!md5Password.equals(uu.getPassword())){
+            throw new PasswordNotMatchException("原始密码不正确");
+        }
+        // 修改密码
+        Integer rows = userMapper.updatePasswordByUid(uid, username, new Date(), getMD5Password(newPassword, uu.getSalt()));
+        if (rows != 1){
+            throw new UpdateException("更新密码时发生未知错误");
+        }
+    }
+
+    @Override
+    public User findByUid(Integer uid) {
+        User uu = userMapper.findByUid(uid);
+        if (uu == null || uu.getIsDelete()==1){
+            throw new UserNotFoundException("用户不存在");
+        }
+        User user = new User();
+        user.setUid(uid);
+        user.setUsername(uu.getUsername());
+        return user;
+    }
+
+    @Override
+    public void updateInfo(Integer uid, String username, User user) {
+        User uu = userMapper.findByUid(uid);
+        if (uu == null || uu.getIsDelete()==1){
+            throw new UserNotFoundException("用户不存在");
+        }
+        user.setUid(uid);
+        user.setUsername(username);
+        user.setModifiedUser(username);
+        user.setModifiedTime(new Date());
+        Integer rows = userMapper.updateInfoByUid(user);
+        if (rows!=1){
+            throw new UpdateException("更新个人信息时产生未知错误");
+        }
     }
 
     /* 定义一个md5算法的加密处理*/

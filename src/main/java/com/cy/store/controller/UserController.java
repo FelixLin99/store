@@ -54,4 +54,10 @@ public class UserController extends BaseController{
         return new JsonResult<User>(OK,u); //希望把user数据存储下来，作为一个全局变量，
     }
 
+    @RequestMapping("change_password")
+    public JsonResult<Void> update(String newPassword, String oldPassword, HttpSession session){
+        userService.update(getUidFromSession(session),getUsernameFromSession(session),newPassword,oldPassword);
+        return new JsonResult<Void>(OK);
+    }
+
 }
