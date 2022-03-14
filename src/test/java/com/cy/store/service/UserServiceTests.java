@@ -78,4 +78,9 @@ public class UserServiceTests {
         userService.updateInfo(8,"admin02",user);
     }
 
+    @Test
+    public void updateAvatar(){
+        userService.updateAvatar(8,"/test/1.jb", "admin02");
+    }
+
 }

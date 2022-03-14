@@ -72,7 +72,12 @@ public class UserMapperTests {
         user.setModifiedUser("Felix");
         user.setModifiedTime(new Date());
         Integer rows = userMapper.updateInfoByUid(user);
+        Assert.assertEquals((long)rows, 1);
+    }
 
+    @Test
+    public void updateAvatarByUid(){
+        Integer rows = userMapper.updateAvatarByUid(8, "/users/avatar/08.jpg", "Felix", new Date());
         Assert.assertEquals((long)rows, 1);
     }
 

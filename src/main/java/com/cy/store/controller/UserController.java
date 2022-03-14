@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 
@@ -76,6 +77,12 @@ public class UserController extends BaseController{
         uu.setEmail(email);
         userService.updateInfo(uid,username,uu);
         return new JsonResult<Void>(OK);
+    }
+
+    @RequestMapping("change_avatar")
+    public JsonResult<String> changeAvatar(HttpSession session, MultipartFile file){
+
+        return null;
     }
 
 }
