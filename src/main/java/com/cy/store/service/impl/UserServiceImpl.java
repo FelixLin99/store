@@ -105,6 +105,9 @@ public class UserServiceImpl implements IUserService {
         User user = new User();
         user.setUid(uid);
         user.setUsername(uu.getUsername());
+        user.setPhone(uu.getPhone());
+        user.setEmail(uu.getEmail());
+        user.setGender(uu.getGender());
         return user;
     }
 
