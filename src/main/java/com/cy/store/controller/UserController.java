@@ -1,5 +1,9 @@
 package com.cy.store.controller;
 
+import com.cy.store.controller.ex.FileEmptyException;
+import com.cy.store.controller.ex.FileSizeException;
+import com.cy.store.controller.ex.FileTypeException;
+import com.cy.store.controller.ex.FileUploadIOException;
 import com.cy.store.entity.User;
 import com.cy.store.service.IUserService;
 import com.cy.store.service.ex.InsertException;
@@ -14,6 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Shuhui Lin
@@ -79,10 +88,50 @@ public class UserController extends BaseController{
         return new JsonResult<Void>(OK);
     }
 
-    @RequestMapping("change_avatar")
-    public JsonResult<String> changeAvatar(HttpSession session, MultipartFile file){
+    private static final int AVATAR_MAX_SIZE = 10 * 1024 *1024; // 10mb
+    private static final List<String> AVATAR_TYPES = new ArrayList<>();
+    static{
+        AVATAR_TYPES.add("image/jpeg");
+        AVATAR_TYPES.add("image/png");
+        AVATAR_TYPES.add("image/bmp");
+        AVATAR_TYPES.add("image/gif");
+    }
 
-        return null;
+    @RequestMapping("change_avatar")
+    public JsonResult<String> changeAvatar(HttpSession session, MultipartFile file) {
+        if (file == null || file.isEmpty()){
+            throw new FileEmptyException("文件为空");
+        }
+        if (file.getSize() > AVATAR_MAX_SIZE){
+            throw new FileSizeException("文件大小超出限制范围(10MB)");
+        }
+        if (!AVATAR_TYPES.contains(file.getContentType())){
+            throw new FileTypeException("不被允许的文件类型");
+        }
+        String dirPath = session.getServletContext().getRealPath("upload");
+        File dir = new File(dirPath);
+        if (!dir.exists()){
+            dir.mkdirs();
+        }
+        String originalFilename = file.getOriginalFilename();
+        String filename = "";
+        int beginIndex = originalFilename.lastIndexOf(".");
+        if (beginIndex > 0) {
+            filename = originalFilename.substring(beginIndex);
+        }
+
+        filename = UUID.randomUUID().toString().toUpperCase() + filename;
+        File dest = new File(dir, filename);
+
+        try {
+            file.transferTo(dest);
+        } catch (IOException e) {
+            throw new FileUploadIOException("文件上传失败");
+        }
+        Integer uid = getUidFromSession(session);
+        String username = getUsernameFromSession(session);
+        userService.updateAvatar(uid, filename, username);
+        return new JsonResult<String>(OK, filename);
     }
 
 }
