@@ -21,6 +21,4 @@ public interface IUserService {
     void updateInfo(Integer uid, String username, User user);
 
     void updateAvatar(Integer uid, String avatar, String username);
-
-
 }

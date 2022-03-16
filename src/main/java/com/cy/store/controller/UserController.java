@@ -109,6 +109,7 @@ public class UserController extends BaseController{
             throw new FileTypeException("不被允许的文件类型");
         }
         String dirPath = session.getServletContext().getRealPath("upload");
+        System.out.println(dirPath);
         File dir = new File(dirPath);
         if (!dir.exists()){
             dir.mkdirs();
@@ -128,10 +129,11 @@ public class UserController extends BaseController{
         } catch (IOException e) {
             throw new FileUploadIOException("文件上传失败");
         }
+        String avatar = "/upload/" + filename;
         Integer uid = getUidFromSession(session);
         String username = getUsernameFromSession(session);
-        userService.updateAvatar(uid, filename, username);
-        return new JsonResult<String>(OK, filename);
+        userService.updateAvatar(uid, avatar, username);
+        return new JsonResult<String>(OK, avatar);
     }
 
 }

@@ -25,10 +25,13 @@ public class BaseController {
         if (e instanceof UsernameDuplicatedException){
             result.setState(4000);
             result.setMessage("用户名已经被占用");
+        } else if (e instanceof AddressCountLimitException){
+            result.setState(4001);
+            result.setMessage("用户地址个数超限");
         } else if (e instanceof InsertException){
             result.setState(5000);
             result.setMessage("注册时产生未知的异常");
-        } else if (e instanceof UserNotFoundException){
+        }else if (e instanceof UserNotFoundException){
             result.setState(5001);
             result.setMessage("用户不存在");
         } else if (e instanceof PasswordNotMatchException){
