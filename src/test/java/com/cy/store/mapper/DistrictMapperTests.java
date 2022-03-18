@@ -34,5 +34,11 @@ public class DistrictMapperTests {
         System.out.println(byParent.toString());
     }
 
+    @Test
+    public void getNameByCode(){
+        String nameByCode = districtMapper.getNameByCode("130900");
+        System.out.println(nameByCode);
+    }
+
 
 }

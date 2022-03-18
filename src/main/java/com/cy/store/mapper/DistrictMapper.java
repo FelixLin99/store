@@ -12,4 +12,5 @@ import java.util.List;
  */
 public interface DistrictMapper {
     List<District> getByParent(String parent);
+    String getNameByCode(String code);
 }

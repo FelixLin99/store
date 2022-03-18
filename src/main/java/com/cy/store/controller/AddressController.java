@@ -10,6 +10,7 @@ import com.cy.store.service.IAddressService;
 import com.cy.store.service.IUserService;
 import com.cy.store.util.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,6 +42,22 @@ public class AddressController extends BaseController{
         addressService.createAddress(uid, username, address);
         return new JsonResult<>(OK);
     }
+
+    @RequestMapping({"","/"})
+    public JsonResult<List<Address>> getAddresses(HttpSession session){
+        Integer uid = getUidFromSession(session);
+        List<Address> addresses = addressService.getAddressesByUid(uid);
+        return new JsonResult<>(OK, addresses);
+    }
+
+    @RequestMapping("{aid}/set_default")
+    public JsonResult<Void> setDefault(@PathVariable("aid") Integer aid, HttpSession session) {
+        Integer uid = getUidFromSession(session);
+        String username = getUsernameFromSession(session);
+        addressService.setDefault(aid, uid, username);
+        return new JsonResult<Void>(OK);
+    }
+
 
 
 

@@ -15,4 +15,8 @@
         SELECT * FROM t_dict_district WHERE parent = #{parent} ORDER BY code ASC
     </select>
 
+    <select id="getNameByCode" resultType="java.lang.String">
+        SELECT name from t_dict_district WHERE code = #{code}
+    </select>
+
 </mapper>

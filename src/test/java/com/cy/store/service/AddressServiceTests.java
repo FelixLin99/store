@@ -1,6 +1,7 @@
 package com.cy.store.service;
 
 import com.cy.store.entity.Address;
+import com.cy.store.service.ex.ServiceException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +29,18 @@ public class AddressServiceTests {
         Address address = new Address();
         address.setName("boy");
         iAddressService.createAddress(8, "admin02", address);
+    }
+    @Test
+    public void setDefault() {
+        try {
+            Integer aid = 5;
+            Integer uid = 8;
+            String username = "系统管理员";
+            iAddressService.setDefault(aid, uid, username);
+            System.out.println("OK.");
+        } catch (ServiceException e) {
+            System.out.println(e.getClass().getSimpleName());
+            System.out.println(e.getMessage());
+        }
     }
 }

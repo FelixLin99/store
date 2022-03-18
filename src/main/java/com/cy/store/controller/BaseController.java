@@ -40,6 +40,10 @@ public class BaseController {
         } else if (e instanceof UpdateException){
             result.setState(5003);
             result.setMessage("更新时产生未知的异常");
+        }else if (e instanceof AddressNotFoundException) {
+            result.setState(4004);
+        } else if (e instanceof AccessDeniedException) {
+            result.setState(4005);
         }
         return result;
     }
